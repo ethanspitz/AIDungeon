@@ -4,9 +4,10 @@ config = configparser.ConfigParser()
 
 config.read('config.ini')
 
-TOKEN = config[discord][token]
+TOKEN = config['discord']['token']
 
-bot_prefix = config[discord][bot_prefix]
+# add space to bot prefix so that you need to put a space after the command prefix
+bot_prefix = config['discord']['bot_prefix'] + " "
 first_print = True
 max_msg_len = 2000-7
 client = discord.Client()
