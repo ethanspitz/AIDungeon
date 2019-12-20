@@ -1,0 +1,13 @@
+[Unit]
+Description=AI Dungeon 2 Discord Bot
+After=multi-user.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/python3 discordClient.py
+Restart=always
+WorkingDirectory=/opt/AIDungeon
+TimeoutSec=5min
+
+[Install]
+WantedBy=multi-user.target

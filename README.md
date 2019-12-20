@@ -16,6 +16,25 @@ source ./venv/bin/activate
 ./play.py
 ```
 
+Discord Bot
+------------------------
+To run as a Discord bot, create a config.ini in the root directory with the following contents
+```
+[discord]
+bot_prefix = !ai
+token = <discord bot token here>
+```
+
+By default it will pass any text after "!ai" into the game. You can configure this prefix.
+To create a bot and get a token for the bot, follow the instructions here: https://discordpy.readthedocs.io/en/latest/discord.html
+
+To start the bot run the discordClient.py:
+```
+python3 discordClient.py
+```
+
+Also included is a systemd service file which you can place in /usr/lib/systemd/system/. This assumes you cloned the game into /opt/AIDungeon2.
+
 Community
 ------------------------
 
