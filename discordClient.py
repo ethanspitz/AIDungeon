@@ -1,8 +1,12 @@
-import discord, pexpect, systemd.daemon, syslog
+import discord, pexpect, systemd.daemon, syslog, configparser
 
-TOKEN = 'NjUzMzgwNjMyNTI0NzUwODY4.Xe3C9w.TxkVjyrV01Jry-3QcF09cjmWxt4'
+config = configparser.ConfigParser()
 
-bot_prefix = '!ai '
+config.read('config.ini')
+
+TOKEN = config[discord][token]
+
+bot_prefix = config[discord][bot_prefix]
 first_print = True
 max_msg_len = 2000-7
 client = discord.Client()
@@ -73,6 +77,7 @@ async def handleCrashRestartAndWaitForPrompt(channel):
 async def on_message(message):
     global child
     global last_match
+    response = ""
     # we do not want the bot to reply to itself
     if message.author == client.user:
         return
@@ -84,13 +89,14 @@ async def on_message(message):
         previous_command = message.content[len(bot_prefix):]
         child.sendline(previous_command)
         await waitForSuccessfulPrompt(message.channel, None)
-        response = child.before + child.after
-        await sendDiscordMessage(message.channel, response)
+        response += child.before + child.after
 
         # get any stragglers, but only give a second timeout this time.
         while not await waitForSuccessfulPrompt(message.channel, 1):
-            response = child.before + child.after
-            await sendDiscordMessage(message.channel, response)
+            response += child.before + child.after
+        
+        # send all responses at once
+        await sendDiscordMessage(message.channel, response)
 
         if str(last_match).strip() == '>':
             # Normal prompt, should be safe to save the game
